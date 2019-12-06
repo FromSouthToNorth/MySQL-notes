@@ -1,0 +1,52 @@
+1.新增语法:
+	insert into 表名(列1,列2,列3)
+	values(值1,值2,值3),(值1,值2,值3),(值1,值2,值3)
+2.修改语法:
+	update subject set 列=值,列=值,列=值
+	where 条件
+3.删除语法:
+	delete from 表 where 条件
+	TRUNCATE table 表名 标识列重置
+4.从旧表选出数据直接加入到新表
+	create table 表名(
+		查询语句
+	)
+5.函数
+	min  max  avg  sum count 
+	now()  substring() substring('好喜欢你哟',2,3) 喜欢你
+6.limit:
+	limit 2,3  从下标为2开始第3条开始 截取3条数据出来
+7.查询:
+	①简单查询
+	②条件查询
+		A:精确条件
+		B:模糊条件 
+	③分组查询:
+	④多表联合查询:	
+		内连接
+			inner join 
+			A 表 和B 表都要有数据 就显示
+		外连接
+			左连接 left join 
+			A表 全部出来 B表匹配 没有的补空
+			右连接 right join 
+			B表 全部出来 A表匹配 没有的补空
+			完全连接 full join    mylsql 没有完全连接
+			AB表 全部出来 没有的补空
+			
+		select * from A 关键字 join B on
+		A.列 =B.列 
+	⑤子查询
+		语法:
+			嵌套在查询内部的查询就叫子查询,执行时先执行括号中的子查询,
+			再执行括号外的父查询
+			
+			如果子查询返回的数据有多个时 不要使用 = >= <= 要使用in 
+			表示是在这个范围内
+			not in 不在这个范围内 
+			
+			
+	
+	
+	
+	

@@ -1,0 +1,58 @@
+子查询语法2:
+	1.但凡之前可以使用联合查询做到的一定可以替换成子查
+	询,子查询能实现的联合查询不一定能实现.
+	
+	代入查询:在查询的过程中根据查询结果再代入到子查询中进行查询
+	select studentName,(select gradeName from grade
+	where gradeID=student.gradeID) from student
+	
+	
+	2.exists用法:
+		A:建表的时候 可以用来判断当前这个表是否存在 如果存在就删除
+		drop table 表名 if exists  表名; 
+		
+		B:判断子查询是否有返回数据 如果有返回数据则为真否则为假
+		select * from 表名 where exists(
+			#查询语句
+		)
+		#如果子查询语句返回的有数据则为true 否则为 false
+		C:not exists
+		select * from 表名 where not exists(
+			#查询语句
+		)
+		#如果子查询语句没有返回数据为true 否则为 false
+		
+	3.临时表和二次查询的使用:
+		临时表
+		create TEMPORARY table 临时表表名称 查询语句
+		把临时表 拿去当成一张表使用 只不过不会存储在表中
+		
+		二次查询:
+		select * from ( 查询语句 ) as temp
+		把查询语句放在了一个 temp 中 把temp当成一张表做后续的操作
+	
+	4.数据库中分页写法:
+		总页数:  总条数: pageTotal 2945 每页条目数:pageNum   25
+				Math.ceil(pageTotal/pageNum)
+		
+		从n条到m条:
+			每页25条 
+				看第二页
+				从 26  条  到 50  条
+	
+			每页8条 
+				看第3页
+				从 17  条  到 24  条
+			
+			每页 pageNum 条 
+				看第pagdeIndex页
+				从  (pagdeIndex-1)*pageNum+1  条    到 pagdeIndex*pageNum  条
+	
+	Mysql：
+		limit:从条开始 截取指定条
+		limit pagdeIndex-1)*pageNum,pageNum
+		
+		
+		
+		
+	

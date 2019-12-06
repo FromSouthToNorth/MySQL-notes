@@ -1,0 +1,57 @@
+CREATE DATABASE mybank;
+USE mybank;
+CREATE TABLE `bank`
+(
+    `customerName` CHAR(10), #用户名 	
+    `currentMoney` DECIMAL(10,2)  #当前余额   	
+);
+/*插入数据*/
+INSERT INTO `bank`(`customerName`,`currentMoney`) 
+     VALUES('张三',1000);
+INSERT INTO `bank`(`customerName`,`currentMoney`) VALUES('李四',1);
+
+#模拟转账过程
+select * from bank;
+begin;
+start TRANSACTION;
+#张三扣掉转账金额 500
+update bank set currentMoney=currentMoney-500
+where customerName='张三';
+#李四加上转账金额 500
+update bank set currentMoney=currentMoney+500
+where customerName='李四';
+#commit;
+rollback;
+#转账结束
+select * from bank;
+
+
+#视图
+CREATE view v_sub
+AS
+select * from subject
+
+select * from v_sub
+
+insert into v_sub values(17,'a++',100,1);
+update v_sub set subjectName='a++'
+where subjectId=16;
+delete from v_sub where subjectId=17
+
+CREATE view v_sub2
+AS
+select Studentresult,subjectName,examdate from result 
+inner join subject on result.SubjectId=subject.subjectId
+select * from v_sub2
+
+update v_sub2 set subjectName='b++'
+where studentresult =90
+insert into v_sub2 values(80,'a--','2019.1.1');
+delete from v_sub2 where  studentresult =90
+select * from result;
+select * from subject;
+
+#索引
+show index from student
+#创建组合索引
+create index index_name on student (studentName,gradeID)

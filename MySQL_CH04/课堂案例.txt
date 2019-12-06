@@ -1,0 +1,150 @@
+USE MySchool
+#修改学号为S1T168001学生的住址为“山东省济南市文化路1号院”。
+update student set address='山东省济南市文化路1号'
+where studentNo='S1T168001'
+#修改学号为S1T168001学生的所属年级为2。
+update student set gradeID=2
+where studentNo='S1T168001'
+#将2009年9月13日考试的“java”课程分数低于60分的学员全部提高5分。
+UPDATE result set studentresult+=5
+where examdate='2009年9月13日' and subjectID=(
+	select subjectID from subject where subjectName='java'
+)
+#修改“java”课程的学时数为55。
+update subject set classhour=55
+where subjectName='java'
+#将学号为S1T168001的学生2009年10月18日的“HTML”课程的分数修改为55。
+UPDATE result set studentresult=55
+where examdate='2009年10月18日' and studentNo='S1T168001' and subjectID=(
+	select subjectID from subject where subjectName='HTML'
+)
+#查询全部S1的学生信息。
+select * from student where gradeID=(
+	select gradeID from grade where gradeName='S1'
+)
+#查询课时超过60的科目信息。
+select * from subject where classHOur>=60
+#S2的科目名称。
+select * from subject where  gradeID=(
+	select gradeID from grade where gradeName='大二'
+)
+#S2男同学的姓名和住址。
+select * from student where gradeID=(
+	select gradeID from grade where gradeName='大二'
+)and sex='男'
+#无电子邮件的学生姓名和年级信息。
+select *from student inner join  grade 
+on student.gradeID=grade.gradeID 
+where email is null
+#出生日期在1990年之后的S2的学生姓名和年级信息。
+select * from student inner join grade on  student.gradeID=grade.gradeID 
+where gradeName='大二' and year(borndate)>=1990
+#参加了日期为2010年2月15日的“HTML”科目考试的成绩信息。
+select * from result where examdate='2010年2月15日'  and subjectID=(
+	select subjectID from subject where subjectName='HTML'
+)
+#查询学生姓名、所属年级名称及联系电话。
+select *from student inner join  grade 
+on student.gradeID=grade.gradeID 
+#查询年级编号为1的科目名称、年级名称及学时。
+select *from `subject` inner join  grade 
+on  subject.gradeID=grade.gradeID 
+where subjectID=1
+#查询参加科目编号为1的考试的学生姓名、分数、考试日期。
+select * from result inner join student
+on student.studentNo=result.studentNo
+where subjectID=2
+
+#查询学号为S1T168001的学生参加的考试科目名称、分数、考试日期。
+select * from result inner join subject
+on result.subjectID=subject.subjectID
+where studentNo='S1T168001'
+#查询参加考试的学生学号、所考科目名称、分数、考试日期.
+select * from result inner join subject
+on result.subjectID=subject.subjectID
+#查询每个年级的总学时数，并按照升序排列。
+select gradeID,sum(classHOur) from
+ subject group by gradeID order by  sum(classHOur)
+#查询每个参加考试的学员的平均分。
+select studentNo,avg(Studentresult)
+ from result group by studentNo
+#查询每门课程的平均分，并按照降序排列。
+select subjectID,avg(Studentresult)
+ from result group by subjectID  order by  
+avg(Studentresult) desc
+#查询每个学生参加的所有考试的总分，并按照降序排列。
+select studentNo,sum(Studentresult)
+from result group by studentNo 
+HAVING sum(Studentresult)>=150
+order by  
+sum(Studentresult)desc
+
+
+
+#查询 学生的考试成绩 学生姓名 课程名称 成绩 日期
+select (select studentName from student 
+where studentNO=result.studentNO) as 姓名,
+(select subjectName from subject where subjectID=
+result.subjectID)as 课程名称,examdate,studentresult
+ from result
+
+select studentName,(select gradeName from grade
+where gradeID=student.gradeID) from student
+
+
+#判断最近一次java考试的是否有不及格的学生
+#如果有就把不及格的学生每个人加5分
+#否则就显示前3名同学 count(*)
+
+	 执行此处操作
+
+select * from result where EXISTS(
+	select * from result where subjectID=(
+	select subjectID from subject where subjectName='java'
+)and studentresult<60
+)
+
+#
+select * from 表名 where exists(
+	#查询语句
+)
+
+
+create TEMPORARY table TestTemp
+select studentNo,sum(Studentresult)as sturesult
+from result group by studentNo 
+select * from TestTemp
+
+select * from 
+( select studentNo,sum(Studentresult)as sturesult
+from result group by studentNo ) as temp
+
+#每个同学 每门课的 最终成绩(考试日期最近)
+#每个同学 每门课最后一次的考试时间
+select (
+	select studentName from student where studentNo= result.studentNo
+)as 姓名,(
+select subjectName from subject where subjectID=result.subjectID
+) as 课程姓名,(select (
+	select gradeName from grade where gradeID=subject.gradeID
+) from subject where subjectID=result.subjectID)as 年级名称  ,maxdate,studentresult from 
+(select studentNO,subjectID,max(examdate)as maxdate
+from result group by studentNO,subjectID)as temp
+inner join result  on temp.studentNO=result.studentNo
+and result.subjectID=temp.subjectID and result.examdate
+=temp.maxdate
+
+
+use jd;
+#每页13条数据 看第4页的商店的数据
+# 从40~52
+select * from shop limit 39,13
+select * from shop limit 52,13
+
+
+
+
+
+
+
+	

@@ -1,0 +1,92 @@
+JDBC中的三个优化
+	1.解决sql注入攻击 在输入过程中混入一些带有特殊含义sql关键字,
+	篡改原来sql语句的意思,达成其目的。
+	引发的原因:写sql的时候使用的是sql拼接 
+	解决步骤:
+		①把原来拼接的位置全部 替换成 ? 
+		where studentName=? and loginpwd=? 
+		
+		②把之前的Statement替换成 PreparedStatement 
+		PreparedStatement pst=conn.prepareStatement(sql);
+		//注意传入 准备处理的sql语句
+		
+		③添加 每个 ? 对应的数据
+		pst.setObject(下标, 值);
+		//给每个问号设置对应的数据  下标从1开始计数 
+		
+		④调用方法 此时 不传入 sql语句
+		pst.executeQuery()
+		pst.executeUpdate()
+	
+	2.数据库连接字符串 绝对不能直接写在程序中
+		单独写在一个配置文件中  xml格式  key-value .properties
+		①创建一个文件 database.properties  存放数据库配置信息
+		driver=com.mysql.jdbc.Driver
+		url=jdbc:mysql://127.0.0.1:3306/myschool
+		user=root
+		pwd=899135
+		
+		②使用代码读取出来
+		public static void init(){
+			Properties param=new Properties();
+			String configfile="database.properties";
+			InputStream is=TestMain.class.
+					getClassLoader().getResourceAsStream(configfile);
+			try {
+				param.load(is);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			driver = param.getProperty("driver");
+			url = param.getProperty("url");
+			user = param.getProperty("user");
+			pwd = param.getProperty("pwd");
+		}
+		
+	3.DAO模式:
+		把数据库的操作进行一个封装 通过接口/实体类等操作实现对数据库增删改查
+		
+		步骤:
+		1.把所有数据库的操作先封装到一个类中 BaseDao.java 
+				开数据库
+				关闭一堆对象
+				
+				增删改
+					executeUpadte
+				查询
+					executeQuery
+				
+		2.搭建DAO模式的开发项目:
+			A:准备工作
+				导入 jar包 写配置文件
+			B:创建dao包(数据库中每张表的相关的操作)
+				①拖入baseDao.java 
+				②分析每张表有哪些操作 全部罗列出来  写成对的接口
+					学生表 StudentDAO
+						新增学生
+						删除学生
+						修改学生
+						查询所有学生信息
+						查询单个学生信息(学号)
+						查询单个学生信息(姓名)
+					成绩表 ResultDao
+						查询所有的成绩
+						根据课程名称 学生名称查询某个成绩
+						根据课程名称 查询某个课程分数
+				
+			C:创建 entity 包 实体类包
+				实体类:把数据库中的表进行一个翻译
+				表名---->类名
+				表列---->类中属性
+				
+				
+			D:创建每个接口对应的实现类 去实现里面的方法
+				创建 dao中的子包 dao.impel
+				创建 学生类 继承 BaseDao 实现 StudentDao
+		
+			E:测试实现类中写的方法是否有出错
+				创建一个测试类 Test 写一个Main方法 调用一下 
+		
+		
+		
